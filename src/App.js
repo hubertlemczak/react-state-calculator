@@ -8,29 +8,21 @@ const App = () => {
   const [operator, setOperator] = useState('+');
   const [panelThree, setPanelThree] = useState('0');
   const [calculatedResult, setCalculatedResult] = useState('0');
-  const [storedResult, setStoredResult] = useState();
+  const [storedResult, setStoredResult] = useState('0');
 
-  const updatePanelOne = (e) => {
-    if (!(panelOne.includes('.') && e.target.innerText === '.')) {
-      if (panelOne === '0' && e.target.innerText !== '.') {
-        setPanelOne(e.target.innerText);
-      } else setPanelOne(panelOne + e.target.innerText);
+  const updatePanel = (value, panel) => {
+    const setter = {
+      one: { set: setPanelOne, panelName: panelOne },
+      three: { set: setPanelThree, panelName: panelThree },
+    };
+
+    if (!(setter[panel].panelName.includes('.') && value === '.')) {
+      if (setter[panel].panelName === '0' && value !== '.') {
+        setter[panel].set(value);
+      } else setter[panel].set(setter[panel].panelName + value);
     }
-    if (e.target.innerText === 'Clear') setPanelOne('0');
+    if (value === 'Clear') setter[panel].set('0');
   };
-
-  const updateOperator = (e) => setOperator(e.target.innerText);
-
-  const updatePanelThree = (e) => {
-    if (!(panelThree.includes('.') && e.target.innerText === '.')) {
-      if (panelThree === '0' && e.target.innerText !== '.') {
-        setPanelThree(e.target.innerText);
-      } else setPanelThree(panelThree + e.target.innerText);
-    }
-    if (e.target.innerText === 'Clear') setPanelThree('0');
-  };
-
-  const updateCalculatedResult = () => setCalculatedResult(calculateResult());
 
   const calculateResult = () => {
     const operators = {
@@ -46,11 +38,8 @@ const App = () => {
     return operators[operator];
   };
 
-  const updateStoredResult = () => setStoredResult(calculatedResult);
-  const recallPanelOne = () => setPanelOne(storedResult || '0');
-  const recallPanelThree = () => setPanelThree(storedResult || '0');
-
   const panelButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '.', 'Clear'];
+  const operatorButtons = ['+', '-', '*', '÷'];
 
   return (
     <div className="calculator">
@@ -60,21 +49,27 @@ const App = () => {
           {panelButtons.map((button) => (
             <Button
               key={button + 'panelOne'}
-              click={updatePanelOne}
+              click={(e) => updatePanel(e.target.innerText, 'one')}
               inner={button}
             />
           ))}
-          <Button click={recallPanelOne} inner="Recall" />
+          <Button
+            click={() => setPanelOne(storedResult.toString())}
+            inner="Recall"
+          />
         </div>
       </div>
 
       <div className="panel">
         <p>{operator}</p>
         <div className="numbers">
-          <Button click={updateOperator} inner="+" />
-          <Button click={updateOperator} inner="-" />
-          <Button click={updateOperator} inner="*" />
-          <Button click={updateOperator} inner="÷" />
+          {operatorButtons.map((button) => (
+            <Button
+              key={button + 'operatorPanel'}
+              click={(e) => setOperator(e.target.innerText)}
+              inner={button}
+            />
+          ))}
         </div>
       </div>
 
@@ -84,18 +79,27 @@ const App = () => {
           {panelButtons.map((button) => (
             <Button
               key={button + 'panelThree'}
-              click={updatePanelThree}
+              click={(e) => updatePanel(e.target.innerText, 'three')}
               inner={button}
             />
           ))}
-          <Button click={recallPanelThree} inner="Recall" />
+          <Button
+            click={() => setPanelThree(storedResult.toString())}
+            inner="Recall"
+          />
         </div>
       </div>
       <div className="panel answer">
         <p>{calculatedResult}</p>
         <div>
-          <Button click={updateCalculatedResult} inner="=" />
-          <Button click={updateStoredResult} inner="Store" />
+          <Button
+            click={() => setCalculatedResult(calculateResult())}
+            inner="="
+          />
+          <Button
+            click={() => setStoredResult(calculatedResult)}
+            inner="Store"
+          />
         </div>
       </div>
     </div>
