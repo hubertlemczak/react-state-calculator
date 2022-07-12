@@ -15,13 +15,14 @@ const App = () => {
       one: { set: setPanelOne, panelName: panelOne },
       three: { set: setPanelThree, panelName: panelThree },
     };
+    const panelName = setter[panel].panelName;
+    const panelSetter = setter[panel].set;
 
-    if (!(setter[panel].panelName.includes('.') && value === '.')) {
-      if (setter[panel].panelName === '0' && value !== '.') {
-        setter[panel].set(value);
-      } else setter[panel].set(setter[panel].panelName + value);
+    if (!(panelName.includes('.') && value === '.')) {
+      if (panelName === '0' && value !== '.') panelSetter(value);
+      else panelSetter(panelName + value);
     }
-    if (value === 'Clear') setter[panel].set('0');
+    if (value === 'Clear') panelSetter('0');
   };
 
   const calculateResult = () => {
