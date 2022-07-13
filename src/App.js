@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 
 import { Button } from './components/button.component';
+import { CalculatorPanel } from './components/calculator-panel.component';
 
 const App = () => {
   const [panelOne, setPanelOne] = useState('0');
@@ -39,57 +40,31 @@ const App = () => {
     return operators[operator];
   };
 
-  const panelButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '.', 'Clear'];
-  const operatorButtons = ['+', '-', '*', '÷'];
-
   return (
     <div className="calculator">
-      <div className="panel">
-        <p>{panelOne}</p>
-        <div className="numbers">
-          {panelButtons.map((button) => (
-            <Button
-              key={button + 'panelOne'}
-              click={(e) => updatePanel(e.target.innerText, 'one')}
-              inner={button}
-            />
-          ))}
-          <Button
-            click={() => setPanelOne(storedResult.toString())}
-            inner="Recall"
-          />
-        </div>
-      </div>
+      <CalculatorPanel
+        panel={panelOne}
+        panelName="panelOne"
+        type="panel"
+        clickOne={(e) => updatePanel(e.target.innerText, 'one')}
+        clickTwo={() => setPanelOne(storedResult.toString())}
+      />
 
-      <div className="panel">
-        <p>{operator}</p>
-        <div className="numbers">
-          {operatorButtons.map((button) => (
-            <Button
-              key={button + 'operatorPanel'}
-              click={(e) => setOperator(e.target.innerText)}
-              inner={button}
-            />
-          ))}
-        </div>
-      </div>
+      <CalculatorPanel
+        panel={operator}
+        panelName="operatorPanel"
+        type="operator"
+        clickOne={(e) => setOperator(e.target.innerText)}
+      />
 
-      <div className="panel">
-        <p>{panelThree}</p>
-        <div className="numbers">
-          {panelButtons.map((button) => (
-            <Button
-              key={button + 'panelThree'}
-              click={(e) => updatePanel(e.target.innerText, 'three')}
-              inner={button}
-            />
-          ))}
-          <Button
-            click={() => setPanelThree(storedResult.toString())}
-            inner="Recall"
-          />
-        </div>
-      </div>
+      <CalculatorPanel
+        panel={panelThree}
+        panelName="panelThree"
+        type="panel"
+        clickOne={(e) => updatePanel(e.target.innerText, 'three')}
+        clickTwo={() => setPanelThree(storedResult.toString())}
+      />
+
       <div className="panel answer">
         <p>{calculatedResult}</p>
         <div>
